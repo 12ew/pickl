@@ -3,7 +3,7 @@ const baseUrl = `http://localhost:3000/api/v1/`
 // const commentUrl = `${baseUrl}posts/${post_id}/comments` // baseUrl + 'posts/post_id/comments/'
 // const allCommentsUrl = `${baseUrl}posts/${post_id}/comments`
 const allPostsUrl = `${baseUrl}posts`
-// const postUrl = `${allPostsUrl}/${id}`
+const postUrl = `${allPostsUrl}/`
 const oneTeamUrl = `${baseUrl}teams/`
 
 
@@ -63,7 +63,7 @@ const postAdapter = {
   },
 
   getPost: function showPost(id) {
-    return fetch(postUrl)
+    return fetch(postUrl + id)
       .then(resp => resp.json())
   },
 
