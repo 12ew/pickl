@@ -1,6 +1,7 @@
 const container = document.querySelector('#container')
 const categories = document.querySelector('#categories')
 const games = document.querySelector('#games')
+
 // const cardBody = document.querySelector('.card-body')
 
 document.addEventListener('DOMContentLoaded', onLoad)
@@ -15,27 +16,44 @@ function renderPosts() {
   return postAdapter.getAllPosts()
     .then(games => {
       games.forEach(game => {
-        bothTeams(game.home_team_id)
-        bothTeams2(game.away_team_id)
+        let gameCard = renderGameTemplate(game)
+        document.querySelector('.row').innerHTML += gameCard
+        bothTeams(game.home_team_id, game.id, 'home')
+        bothTeams(game.away_team_id, game.id, 'away')
+
       })
     })
 }
 
-function bothTeams(id) {
-  teamAdapter.oneTeam(id)
+function renderGameTemplate(game) {
+  return `<div class="col-sm-3" data-game-id=${game.id}>
+    <div class="card">
+        <img class="card-img-top team_1" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
+
+        <img class="card-img-top team_2" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
+
+
+
+        <div class="card-body">
+          <h1 class='home-team' data-game-home-id=${game.home_team_id}></h1>
+          <h2>vs</h2>
+          <h1 class='away-team' data-game-away-id=${game.away_team_id}></h1>
+        </div>
+
+      </div>
+  </div>`
+}
+
+
+function bothTeams(id, gameId, homeOrAway) {
+  return teamAdapter.oneTeam(id)
        .then(team => {
          let q = temp(team)
-         document.querySelector('#home-team').innerHTML = q
+         // console.log(team);
+         document.querySelector(`[data-game-id="${gameId}"] [data-game-${homeOrAway}-id]`).innerHTML = q
        })
 }
 
-function bothTeams2(id) {
-  teamAdapter.oneTeam(id)
-       .then(team => {
-         let q = temp(team)
-         document.querySelector('#away-team').innerHTML = q
-       })
-}
 
 function temp(team) {
   return`<p>${team.name}</p>`
