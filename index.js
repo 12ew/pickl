@@ -13,10 +13,6 @@ renderPosts()
   //renderGames()
   // renderOnePost(2)
 }
-// (function () {
-//   addClickEvents()
-//   debugger
-// })()
 
 
 
@@ -54,15 +50,16 @@ function renderGameTemplate(game) {
 function bothTeams(id, gameId, homeOrAway) {
   return teamAdapter.oneTeam(id)
        .then(team => {
-         let q = temp(team)
+         let teamName = getTeamName(team)
          // console.log(team);
-         document.querySelector(`[data-game-id="${gameId}"] [data-game-${homeOrAway}-id]`).innerHTML = q
+         document.querySelector(`[data-game-id="${gameId}"] [data-game-${homeOrAway}-id]`).innerHTML = teamName
        })
 }
 
-function temp(team) {
+function getTeamName(team) {
   return`${team.name}`
 }
+
 
 function addClickEvents() {
   let divs = document.getElementsByClassName('card')
@@ -78,27 +75,37 @@ function addClickEvents() {
 function renderGamePage(id) {
   return postAdapter.getPost(id)
   .then(game => {
-    let page = gameTemplate(game.id)
+    let page = gameTemplate(game)
      document.querySelector('.row').innerHTML = page
     teamForGamePage(game.home_team_id, game.id, 'home')
     teamForGamePage(game.away_team_id, game.id, 'away')
-  }).then(() => {
-    handleHomeLikeCick()
-    handleAwayLikeCick()
+    document.querySelector('#counter-home').innerText = game.home_likes
+    document.querySelector('#counter-away').innerText = game.away_likes
+    handleHomeLikeCick(game.id)
+    handleAwayLikeCick(game.id)
+    handleCommentSubmitButton()
+    renderComments(game.id)
+
   })
 
 }
 
 
-
-
-function handleHomeLikeCick() {
+function handleHomeLikeCick(gameId) {
   const homeLikeButton = document.querySelector('#home_like')
 
   homeLikeButton.addEventListener('click', handleClick)
 
+
   function handleClick(event) {
-    console.log(event.target)
+    document.querySelector('#counter-home').innerText = parseInt(document.querySelector('#counter-home').innerText) + 1
+    let q = event.target.getAttribute('data-help')
+    console.log(q);
+    // debugger
+    let data = {home_likes: parseInt(document.querySelector('#counter-home').innerText)}
+    console.log(data);
+    postAdapter.updatePost(data, q)
+    .then(console.log)
   }
 }
 
@@ -108,44 +115,116 @@ function handleAwayLikeCick() {
   awayLikeButton.addEventListener('click', handleClick)
 
   function handleClick(event) {
-    console.log(event.target)
+      document.querySelector('#counter-away').innerText = parseInt(document.querySelector('#counter-away').innerText) + 1
+      let q = event.target.getAttribute('data-help')
+      console.log(q);
+      // debugger
+      let data = {away_likes: parseInt(document.querySelector('#counter-away').innerText)}
+      console.log(data);
+      postAdapter.updatePost(data, q)
+      .then(console.log)
   }
 }
 
 
 
 function gameTemplate(game) {
-  return  `<div class="col-sm-5" data-game-id=${game.id}>
-      <div class="card home_team">
-        <img class="card-img-top" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">Votes</h5>
+  return  `<div class="col-md-12" id="container">
 
-          <h1 id='counter'>
-            540
-          </h1>
-          <button class='<3' id="home_like" data-home-likes-id=${game.home_team_id}> ❤️ </button>
-          <br>
-          <br>
-          <p class="card-text font-weight-bold data-team-home-id=${game.home_team_id}"></p>
+        <div id="categories">
+
         </div>
-      </div>
-    </div>
 
-    <div class="col-sm-5">
-      <div class="card away_team">
-          <img class="card-img-top" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">Votes</h5>
+        <div id="games">
 
-            <h1 id='counter'>
-              130
+
+          <div class="card-deck text-center">
+            <div class="card-deck ">
+              <div class="row">
+
+              <div class="col-sm-5" data-game-id=${game.id}>
+                  <div class="card home_team">
+                    <h4 id='home-name'></h4>
+                    <img class="card-img-top" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">Votes</h5>
+
+                      <h1 id='counter-home'>
             </h1>
-            <button class='<3' id="away_like" data-away-likes-id=${game.away_team_id}> ❤️ </button>
-            <br>
-            <br>
-            <p class="card-text font-weight-bold data-team-away-id=${game.away_team_id}"></p>
+                      <button class='<3' id="home_like" data-help=${game.id} data-home-likes-id=${game.home_team_id}>❤️ </button>
+                      <br>
+                      <br>
+                      <p class="card-text font-weight-bold data-team-home-id=${game.home_team_id}"></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-5">
+                  <div class="card away_team">
+                    <h4 id='away-name'></h4>
+                      <img class="card-img-top" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title">Votes</h5>
+
+                        <h1 id='counter-away'></h1>
+                        <button class='<3' id="away_like" data-help=${game.id} data-away-likes-id=${game.away_team_id}> ❤️ </button>
+                        <br>
+                        <br>
+                        <p class="card-text font-weight-bold data-team-away-id=${game.away_team_id}"></p>
+                      </div>
+                    </div>
+                  </div>
+
+              </div>
+            </div>
           </div>
+
+
+          <div>
+            <h3>join the conversation</h3>
+              <div id='list' class='comments' data-help=${game.id}></div>
+
+              <h6>leave a comment</h6>
+
+
+              <form>
+                <div class="row">
+                  <div class="form-group col-sm-9">
+                    <label for="text_area"></label>
+
+                    <textarea class="form-control" id="text_area" rows="2"></textarea>
+                    <hr>
+                    <button type="submit" class="btn btn-primary" data-help=${game.id}>Submit</button>
+
+                  </div>
+              </form>
+              <br>
+              <div>
+                <ul class="commentsBody">
+
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
+            </div>
+          </div>
+
+          <br>
+
+          <div class="row">
+           <div class="col s12 m12">
+             <div class="card-panel blue">
+               <span class="white-text"> <h6></h6>
+               </span>
+             </div>
+           </div>
+          </div>
+
+          <br>
+          <br>
+
         </div>
       </div>`
 }
@@ -154,7 +233,49 @@ function gameTemplate(game) {
 function teamForGamePage(id, gameId, homeOrAway) {
   return teamAdapter.oneTeam(id)
        .then(team => {
-         let q = temp(team)
-         document.querySelector(`[data-game-${homeOrAway}-id]`).innerHTML = q
+         let teamName = getTeamName(team)
+         document.querySelector(`#${homeOrAway}-name`).innerHTML = teamName
        })
+}
+
+
+function handleCommentSubmitButton() {
+  const submitForm = document.querySelector('form')
+
+  submitForm.addEventListener('submit', handleButton)
+
+    function handleButton(event) {
+      event.preventDefault()
+
+      let textarea = document.querySelector('.form-control')
+
+      let commentContent = `<li>${textarea.value}</li>`
+
+      btn = document.querySelector('.btn')
+      id = parseInt(btn.getAttribute('data-help'))
+      let data = {
+        post_id: id,
+        content: textarea.value
+      }
+
+      let commentsBody = document.querySelector('.commentsBody')
+
+      commentsBody.innerHTML += commentContent
+
+      commentAdapter.createComment(data)
+  }
+}
+
+
+function renderComments(id) {
+  let commentsBody = document.querySelector('.commentsBody')
+
+  commentAdapter.getAllComments()
+    .then(comments => {
+      comments.forEach(comment => {
+        if (comment.post_id === id) {
+          commentsBody.innerHTML += `<li>${comment.content}</li>`
+        }
+    })
+  })
 }

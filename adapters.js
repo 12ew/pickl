@@ -1,7 +1,7 @@
 const baseUrl = `http://localhost:3000/api/v1/`
 // const userUrl = `${baseUrl}users`   // baseUrl + 'users'
-// const commentUrl = `${baseUrl}posts/${post_id}/comments` // baseUrl + 'posts/post_id/comments/'
-// const allCommentsUrl = `${baseUrl}posts/${post_id}/comments`
+const commentUrl = `${baseUrl}comments/` // baseUrl + 'posts/post_id/comments/'
+// const allCommentsUrl = `${baseUrl}posts/`
 const allPostsUrl = `${baseUrl}posts`
 const postUrl = `${allPostsUrl}/`
 const oneTeamUrl = `${baseUrl}teams/`
@@ -23,25 +23,25 @@ const oneTeamUrl = `${baseUrl}teams/`
 // }
 
 
-// const commentAdapter = {
-//   createComment: function createComment(data) {
-//     let options = {
-//       method: 'POST',
-//       body: JSON.stringify(data),
-//       headers: {
-//         'content-type': 'application/json'
-//       }
-//     }
-//
-//     return fetch(commentUrl, options)
-//       .then(resp => resp.json())
-//   },
-//
-//   getAllComments: function getAllComments() {
-//     return fetch(allCommentsUrl)
-//       .then(resp => resp.json())
-//   }
-// }
+const commentAdapter = {
+  createComment: function createComment(data) {
+    let options = {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json',
+        'content-type': 'application/json'
+      }
+    }
+
+    return fetch(commentUrl, options)
+  },
+
+  getAllComments: function getAllComments() {
+    return fetch(commentUrl)
+      .then(resp => resp.json())
+  }
+}
 
 const postAdapter = {
   createPost: function createPost(data) {
@@ -77,7 +77,7 @@ const postAdapter = {
       }
     }
 
-    return fetch(postUrl, options)
+    return fetch(postUrl + id, options)
       .then(resp => resp.json())
   }
 }
