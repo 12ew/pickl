@@ -1,16 +1,22 @@
-const container = document.querySelector('#container')
-const categories = document.querySelector('#categories')
-const games = document.querySelector('#games')
 
 // const cardBody = document.querySelector('.card-body')
 
 document.addEventListener('DOMContentLoaded', onLoad)
 
 function onLoad() {
+  const container = document.querySelector('#container')
+  const categories = document.querySelector('#categories')
+  const games = document.querySelector('#games')
+  const body = document.querySelector('#body')
+
 renderPosts()
   //renderGames()
   // renderOnePost(2)
 }
+// (function () {
+//   addClickEvents()
+//   debugger
+// })()
 
 function renderPosts() {
   return postAdapter.getAllPosts()
@@ -22,22 +28,24 @@ function renderPosts() {
         bothTeams(game.away_team_id, game.id, 'away')
 
       })
+    }).then(() => {
+      addClickEvents()
     })
 }
 
 function renderGameTemplate(game) {
-  return `<div class="col-sm-3" data-game-id=${game.id}>
-    <div class="card">
-        <img class="card-img-top team_1" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
+  return `<div class="col-sm-3" data-game-id=${game.id} data-help=${game.id}>
+    <div class="card" data-help=${game.id}>
+        <img class="card-img-top team_1 game-number${game.id}" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap" data-help=${game.id}>
 
-        <img class="card-img-top team_2" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
+        <img class="card-img-top team_2 game-number${game.id}" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap" data-help=${game.id}>
 
 
 
-        <div class="card-body">
-          <h1 class='home-team' data-game-home-id=${game.home_team_id}></h1>
-          <h2>vs</h2>
-          <h1 class='away-team' data-game-away-id=${game.away_team_id}></h1>
+        <div class="card-body game-number${game.id}" data-help=${game.id}>
+          <h1 class='home-team game-number${game.id}' data-game-home-id=${game.home_team_id} data-help=${game.id}></h1>
+          <h2 data-help=${game.id}>vs</h2>
+          <h1 class='away-team game-number${game.id}' data-game-away-id=${game.away_team_id} data-help=${game.id}></h1>
         </div>
 
       </div>
@@ -54,9 +62,42 @@ function bothTeams(id, gameId, homeOrAway) {
        })
 }
 
-
 function temp(team) {
-  return`<p>${team.name}</p>`
+  return`${team.name}`
+}
+
+function addClickEvents() {
+  let divs = document.getElementsByClassName('card')
+  for (let i = 0; i < divs.length; i++) {
+    divs[i].onclick = (e) => {
+    let target = e.target
+      let gameNumber = target.getAttribute('data-help')
+      renderGamePage(gameNumber)
+    }
+  }
+}
+
+function renderGamePage(id) {
+  return postAdapter.getPost(id)
+  .then(game => {
+    let page = gameTemplate(game.id)
+    body.innerHTML = page
+    teamForGamePage(game.home_team_id, game.id, 'home')
+    teamForGamePage(game.away_team_id, game.id, 'away')
+  })
+}
+
+function gameTemplate(game) {
+  return `<h1 data-game-home-id=${game.home_team_id}> </h1>
+  <h1 data-game-away-id=${game.away_team_id}> </h1>`
+}
+
+function teamForGamePage(id, gameId, homeOrAway) {
+  return teamAdapter.oneTeam(id)
+       .then(team => {
+         let q = temp(team)
+         document.querySelector(`[data-game-${homeOrAway}-id]`).innerHTML = q
+       })
 }
 // function callAndLoad(id) {
 //   return renderOnePost(id)
