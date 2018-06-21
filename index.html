@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="styles.css">
   </head>
 
-  <body>
+  <body id="body">
     <nav class="navbar sticky-top navbar-light bg-success justify-content-center">
       <a class="navbar-brand font-weight-bold text-monospace" id="brand" href="#">Pickl</a>
     </nav>
@@ -29,33 +29,47 @@
           <!-- START CARD DECK -->
 
           <div class="card-deck text-center">
-
-
             <div class="card-deck ">
               <div class="row">
-                <!-- <div class="col-sm-3">
-                  <div class="card">
-                      <img class="card-img-top team_1" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
 
-                      <img class="card-img-top team_2" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
+                  <!-- Append card template -->
 
-
-
-                      <div class="card-body">
-                        <h1 id='home-team'></h1>
-                        <h2>vs</h2>
-                        <h1 id='away-team'></h1>
-
-                      </div>
-
-                    </div>
-                </div> -->
               </div>
             </div>
           </div>
 
-
           <!-- END CARD DECK -->
+
+          <div>
+            <h3>join the conversation</h3>
+              <div id='list' class='comments'></div>
+
+              <h6>leave a comment</h6>
+
+
+              <form>
+                <div class="row justify-content-center">
+                  <div class="form-group col-sm-9">
+                    <label for="text_area"></label>
+                    <textarea class="form-control" id="text_area" rows="2"></textarea>
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+              </form>
+
+            </div>
+          </div>
+
+          <br>
+
+          <div class="row">
+           <div class="col s12 m12">
+             <div class="card-panel blue">
+               <span class="white-text"> <h6></h6>
+               </span>
+             </div>
+           </div>
+          </div>
 
           <br>
           <br>
