@@ -13,6 +13,10 @@ renderPosts()
   //renderGames()
   // renderOnePost(2)
 }
+// (function () {
+//   addClickEvents()
+//   debugger
+// })()
 
 
 
@@ -145,6 +149,7 @@ function gameTemplate(game) {
         </div>
       </div>`
 }
+
 
 function teamForGamePage(id, gameId, homeOrAway) {
   return teamAdapter.oneTeam(id)
