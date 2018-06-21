@@ -65,6 +65,7 @@ const postAdapter = {
   getPost: function showPost(id) {
     return fetch(postUrl + id)
       .then(resp => resp.json())
+      // .then(console.log)
   },
 
   updatePost: function updatePost(data, id) {

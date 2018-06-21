@@ -89,7 +89,8 @@ function renderGamePage(id) {
 
 function gameTemplate(game) {
   return `<h1 data-game-home-id=${game.home_team_id}> </h1>
-  <h1 data-game-away-id=${game.away_team_id}> </h1>`
+  <h1 data-game-away-id=${game.away_team_id}> </h1>
+  <h2 class="back">BACK</h2>`
 }
 
 function teamForGamePage(id, gameId, homeOrAway) {
