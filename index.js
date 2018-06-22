@@ -35,8 +35,8 @@ function renderPosts() {
 function renderGameTemplate(game) {
   return `<div class="col-sm-3" data-game-id=${game.id} data-help=${game.id}>
     <div class="card" data-help=${game.id}>
-        <img class="card-img-top team_1 game-number${game.id}" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap" data-help=${game.id}>
-        <img class="card-img-top team_2 game-number${game.id}" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap" data-help=${game.id}>
+        <img data-image-home-id=${game.home_team_id} class="card-img-top team_1 game-number${game.id}"  alt="Card image cap" data-help=${game.id}>
+        <img data-image-away-id=${game.away_team_id} class="card-img-top team_2 game-number${game.id}"  alt="Card image cap" data-help=${game.id}>
         <div class="card-body game-number${game.id}" data-help=${game.id}>
           <h1 class='home-team game-number${game.id}' data-game-home-id=${game.home_team_id} data-help=${game.id}></h1>
           <h2 data-help=${game.id}>vs</h2>
@@ -51,13 +51,25 @@ function bothTeams(id, gameId, homeOrAway) {
   return teamAdapter.oneTeam(id)
        .then(team => {
          let teamName = getTeamName(team)
+         let teamImage = getTeamImage(team)
          // console.log(team);
+         // document.querySelector(`data-image='${homeOrAway}-image-${gameId}`).src = teamImage
+
+
+         document.querySelector(`[data-game-id="${gameId}"] [data-image-${homeOrAway}-id]`).src = teamImage
+
+
+         // document.querySelector('.team_1').src = teamImage
          document.querySelector(`[data-game-id="${gameId}"] [data-game-${homeOrAway}-id]`).innerHTML = teamName
        })
 }
 
 function getTeamName(team) {
   return`${team.name}`
+}
+
+function getTeamImage(team) {
+  return`${team.image}`
 }
 
 
@@ -255,6 +267,7 @@ function handleCommentSubmitButton() {
       id = parseInt(btn.getAttribute('data-help'))
       let data = {
         post_id: id,
+        user_id: 1,
         content: textarea.value
       }
 
