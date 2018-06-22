@@ -14,27 +14,42 @@ renderPosts()
   // renderOnePost(2)
 }
 
-
-
-
 function renderPosts() {
   return postAdapter.getAllPosts()
     .then(games => {
       games.forEach(game => {
-        if (game.date === '2018-06-22') {
-          let newTime = formatTime(game.time)
-        let gameCard = renderGameTemplate(game, newTime)
-        document.querySelector('.row').innerHTML += gameCard
-        bothTeams(game.home_team_id, game.id, 'home')
-        bothTeams(game.away_team_id, game.id, 'away')
-}
+        game.time = formatTime(game.time)
+      })
+      let today = getToday()
+      games.forEach(game => {
+
+          if (game.date === today) {
+          let newTime = game.time
+          let gameCard = renderGameTemplate(game, newTime)
+          document.querySelector('.row').innerHTML += gameCard
+          bothTeams(game.home_team_id, game.id, 'home')
+          bothTeams(game.away_team_id, game.id, 'away')
+        }
       })
     }).then(() => {
       addClickEvents()
     })
 }
 
-;
+function getToday() {
+  let today = new Date();
+  let dd = today.getDate();
+  let mm = today.getMonth()+1; //January is 0!
+  let yyyy = today.getFullYear();
+  if(dd<10) {
+      dd = '0'+dd
+  }
+  if(mm<10) {
+      mm = '0'+mm
+  }
+  today = yyyy + '-' + mm + '-' + dd;
+  return today
+}
 
 
 function renderGameTemplate(game, gameTime) {
@@ -47,6 +62,7 @@ function renderGameTemplate(game, gameTime) {
           <h2 data-help=${game.id}>vs</h2>
           <h1 class='away-team game-number${game.id}' data-game-away-id=${game.away_team_id} data-help=${game.id}></h1>
         </div>
+        <h4>${game.home_likes + game.away_likes} Votes</h4>
         <h6>${gameTime}</h6>
       </div>
   </div>`
@@ -96,6 +112,7 @@ function renderGamePage(id) {
     handleAwayLikeCick(game.id)
     handleCommentSubmitButton()
     renderComments(game.id)
+    backClick()
 
   })
 
@@ -137,6 +154,21 @@ function handleAwayLikeCick() {
   }
 }
 
+function getToday() {
+  let today = new Date();
+  let dd = today.getDate();
+  let mm = today.getMonth()+1; //January is 0!
+  let yyyy = today.getFullYear();
+  if(dd<10) {
+      dd = '0'+dd
+  }
+  if(mm<10) {
+      mm = '0'+mm
+  }
+  today = yyyy + '-' + mm + '-' + dd;
+  return today
+}
+
 function formatTime(time) {
   let amOrPm = 'AM'
   let newTime = time.split('T')
@@ -153,7 +185,11 @@ function formatTime(time) {
 
 function gameTemplate(game) {
   return  `<div class="col-md-12" id="container">
-
+        <div class='row'>
+          <div class='col-sm-2'>
+            <button id='go-back'>Back</button>
+          </div>
+        </div>
         <div id="categories">
 
         </div>
@@ -306,4 +342,21 @@ function renderComments(id) {
         }
     })
   })
+}
+
+function backClick() {
+  document.addEventListener('click', (e) => {
+    console.log(e.target);
+
+    if (e.target.id === 'go-back') {
+      console.log('HELLLLLOOOOO');
+      // renderPosts()
+      location.reload(false)
+    }
+  })
+  // let back = document.querySelector('#go-back')
+  // back.addEventListener('click', (e) => {
+  //   console.log(e.target);
+  //   renderPosts()
+  // })
 }

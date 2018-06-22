@@ -13,3 +13,8 @@
 .card {
   margin-top: 20px;
 }
+
+#go-back {
+  color: red;
+  text-align: left;
+}
