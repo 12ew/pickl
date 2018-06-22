@@ -21,18 +21,23 @@ function renderPosts() {
   return postAdapter.getAllPosts()
     .then(games => {
       games.forEach(game => {
-        let gameCard = renderGameTemplate(game)
+        if (game.date === '2018-06-22') {
+          let newTime = formatTime(game.time)
+        let gameCard = renderGameTemplate(game, newTime)
         document.querySelector('.row').innerHTML += gameCard
         bothTeams(game.home_team_id, game.id, 'home')
         bothTeams(game.away_team_id, game.id, 'away')
-
+}
       })
     }).then(() => {
       addClickEvents()
     })
 }
 
-function renderGameTemplate(game) {
+;
+
+
+function renderGameTemplate(game, gameTime) {
   return `<div class="col-sm-3" data-game-id=${game.id} data-help=${game.id}>
     <div class="card" data-help=${game.id}>
         <img data-image-home-id=${game.home_team_id} class="card-img-top team_1 game-number${game.id}"  alt="Card image cap" data-help=${game.id}>
@@ -42,6 +47,7 @@ function renderGameTemplate(game) {
           <h2 data-help=${game.id}>vs</h2>
           <h1 class='away-team game-number${game.id}' data-game-away-id=${game.away_team_id} data-help=${game.id}></h1>
         </div>
+        <h6>${gameTime}</h6>
       </div>
   </div>`
 }
@@ -131,7 +137,19 @@ function handleAwayLikeCick() {
   }
 }
 
-
+function formatTime(time) {
+  let amOrPm = 'AM'
+  let newTime = time.split('T')
+  newTime = newTime[1].split('.')
+  newTime = newTime[0].split(':')
+  let hour = parseInt(newTime[0])
+  if (hour > 12) {
+    hour -= 12
+    amOrPm = 'PM'
+  }
+  let formattedTime = hour + ':' + newTime[1] + amOrPm
+  return formattedTime
+}
 
 function gameTemplate(game) {
   return  `<div class="col-md-12" id="container">
@@ -172,7 +190,7 @@ function gameTemplate(game) {
                         <h5 class="card-title">Votes</h5>
 
                         <h1 id='counter-away'></h1>
-                        <button class='<3' id="away_like" data-help=${game.id} data-away-likes-id=${game.away_team_id}> ❤️ </button>
+                        <button class='<3' id="away_like" data-help=${game.id} data-away-likes-id=${game.away_team_id}> ⚾ </button>
                         <br>
                         <br>
                         <p class="card-text font-weight-bold data-team-away-id=${game.away_team_id}"></p>
