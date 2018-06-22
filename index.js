@@ -52,14 +52,7 @@ function bothTeams(id, gameId, homeOrAway) {
        .then(team => {
          let teamName = getTeamName(team)
          let teamImage = getTeamImage(team)
-         // console.log(team);
-         // document.querySelector(`data-image='${homeOrAway}-image-${gameId}`).src = teamImage
-
-
          document.querySelector(`[data-game-id="${gameId}"] [data-image-${homeOrAway}-id]`).src = teamImage
-
-
-         // document.querySelector('.team_1').src = teamImage
          document.querySelector(`[data-game-id="${gameId}"] [data-game-${homeOrAway}-id]`).innerHTML = teamName
        })
 }
@@ -157,7 +150,7 @@ function gameTemplate(game) {
               <div class="col-sm-5" data-game-id=${game.id}>
                   <div class="card home_team">
                     <h4 id='home-name'></h4>
-                    <img class="card-img-top" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
+                    <img id='home-image' class="card-img-top" src="" alt="Card image cap">
                     <div class="card-body">
                       <h5 class="card-title">Votes</h5>
 
@@ -174,7 +167,7 @@ function gameTemplate(game) {
                 <div class="col-sm-5">
                   <div class="card away_team">
                     <h4 id='away-name'></h4>
-                      <img class="card-img-top" src="https://www.mlbstatic.com/mlb.com/images/share/147.jpg" alt="Card image cap">
+                      <img id='away-image' class="card-img-top" src="" alt="Card image cap">
                       <div class="card-body">
                         <h5 class="card-title">Votes</h5>
 
@@ -246,6 +239,8 @@ function teamForGamePage(id, gameId, homeOrAway) {
   return teamAdapter.oneTeam(id)
        .then(team => {
          let teamName = getTeamName(team)
+         let teamImage = getTeamImage(team)
+         document.querySelector(`#${homeOrAway}-image`).src = teamImage
          document.querySelector(`#${homeOrAway}-name`).innerHTML = teamName
        })
 }
@@ -276,6 +271,8 @@ function handleCommentSubmitButton() {
       commentsBody.innerHTML += commentContent
 
       commentAdapter.createComment(data)
+
+        textarea.value = ''
   }
 }
 
